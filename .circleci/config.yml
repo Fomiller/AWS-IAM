@@ -6,10 +6,14 @@ jobs:
     docker:
       # replace with your preferred image
       - image: fomiller/megatainer:latest
+    environment:
+      AWS_ACCESS_KEY_ID: AWS_ACCESS_KEY_ID_DEV
+      AWS_SECRET_ACCESS_KEY: AWS_SECRET_ACCESS_KEY_DEV
     steps:
       - aws-cli/setup:
-          aws-access-key-id: AWS_ACCESS_KEY_ID_DEV 
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY_DEV
+          aws-access-key-id: AWS_ACCESS_KEY_ID 
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          aws-profile: default
       - run: 
           command: |
             env
@@ -23,10 +27,6 @@ jobs:
       - image: fomiller/megatainer:latest
     steps:
       - checkout
-      - aws-cli/setup:
-          aws-access-key-id: AWS_ACCESS_KEY_ID_DEV 
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY_DEV
-          profile-name: default
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
           at: ../
@@ -44,10 +44,6 @@ jobs:
     docker:
       - image: fomiller/megatainer:latest
     steps:
-      - aws-cli/setup:
-          aws-access-key-id: AWS_ACCESS_KEY_ID_DEV 
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY_DEV
-          profile-name: default
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
           at: ../
