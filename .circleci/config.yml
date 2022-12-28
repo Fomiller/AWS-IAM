@@ -3,9 +3,7 @@ orbs:
   aws-cli: circleci/aws-cli@3.1.4
 jobs:
   terragrunt:
-    docker:
-      - image: fomiller/megatainer:latest
-    exeutor: aws-cli/default
+    executor: aws-cli/default
     steps:
       - checkout
       - aws-cli/setup:
