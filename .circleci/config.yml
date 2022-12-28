@@ -1,15 +1,15 @@
 version: 2.1
+orbs:
+  aws-cli: circleci/aws-cli@2.0.3
 jobs:
   aws login:
     docker:
+      # replace with your preferred image
       - image: fomiller/megatainer:latest
-    environment:
-      AWS_PROFILE: default
     steps:
-      - run:
-          command: |
-              aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID_DEV --profile $AWS_PROFILE
-              aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY_DEV --profile $AWS_PROFILE
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY_ID_DEV 
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY_DEV
       - persist_to_workspace:
           root: ../
           paths:
