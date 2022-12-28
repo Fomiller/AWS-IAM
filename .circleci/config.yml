@@ -10,6 +10,9 @@ jobs:
       - aws-cli/setup:
           aws-access-key-id: AWS_ACCESS_KEY_ID_DEV 
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY_DEV
+      - run: 
+          command: |
+            env
       - persist_to_workspace:
           root: ../
           paths:
@@ -30,6 +33,7 @@ jobs:
       - run:
           working_directory: us-east-1/dev/
           command: |
+            env
             terragrunt run-all validate
       - persist_to_workspace:
           root: ../
