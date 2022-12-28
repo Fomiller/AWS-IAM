@@ -7,12 +7,13 @@ jobs:
       - image: fomiller/megatainer:latest
     steps:
       - aws-cli/setup:
-          aws-access-key-id: AWS_ACCESS_KEY_ID_DEV 
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY_DEV
+          aws-access-key-id: $AWS_ACCESS_KEY_ID_DEV 
+          aws-secret-access-key: $AWS_SECRET_ACCESS_KEY_DEV
       - checkout
       - run:
           working_directory: us-east-1/dev/
           command: |
+            env
             terragrunt run-all validate
             terragrunt run-all plan
             terragrunt run-all apply --terragrunt-non-interactive
