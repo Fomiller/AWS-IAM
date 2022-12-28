@@ -5,12 +5,13 @@ jobs:
   terragrunt:
     docker:
       - image: fomiller/megatainer:latest
+    exeutor: aws-cli/default
     steps:
+      - checkout
       - aws-cli/setup:
           aws-access-key-id: AWS_ACCESS_KEY_ID_DEV 
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY_DEV
           profile-name: default
-      - checkout
       - run:
           working_directory: us-east-1/dev/
           command: |
