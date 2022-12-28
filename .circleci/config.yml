@@ -1,26 +1,92 @@
 version: 2.1
 orbs:
-  aws-cli: circleci/aws-cli@3.1.4
+  aws-cli: circleci/aws-cli@2.0.3
 jobs:
-  terragrunt:
-    executor: aws-cli/default
+  aws login:
+    docker:
+      # replace with your preferred image
+      - image: fomiller/megatainer:latest
+    steps:
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY_ID_DEV 
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY_DEV
+      - persist_to_workspace:
+          root: ../
+          paths:
+            - ./*
+
+  terraform init and validate:
+    docker:
+      - image: fomiller/megatainer:latest
     steps:
       - checkout
       - aws-cli/setup:
           aws-access-key-id: AWS_ACCESS_KEY_ID_DEV 
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY_DEV
           profile-name: default
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: ../
       - run:
           working_directory: us-east-1/dev/
           command: |
             terragrunt run-all validate
+      - persist_to_workspace:
+          root: ../
+          paths:
+            - ./*
+
+  terraform plan:
+    docker:
+      - image: fomiller/megatainer:latest
+    steps:
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY_ID_DEV 
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY_DEV
+          profile-name: default
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: ../
+      - run:
+          working_directory: us-east-1/dev/
+          command: |
             terragrunt run-all plan
+      - persist_to_workspace:
+          root: ../
+          paths:
+            - ./*
+
+  terraform apply:
+    docker:
+      - image: fomiller/megatainer:latest
+    steps:
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: ../
+      - run:
+          working_directory: us-east-1/dev/
+          command: |
             terragrunt run-all apply --terragrunt-non-interactive
           
 workflows:
   version: 2
   Terraform Deploy:
     jobs:
-      - terragrunt:
+      - aws login:
           context:
             - aws-credentials
+      - terraform init and validate:
+          context:
+            - aws-credentials
+          requires:
+            - aws login
+      - terraform plan:
+          context:
+            - aws-credentials
+          requires:
+            - terraform init and validate
+      - terraform apply:
+          context:
+            - aws-credentials
+          requires:
+            - terraform plan
