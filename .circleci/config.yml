@@ -1,24 +1,26 @@
 version: 2.1
 orbs:
-  aws-terragrunt: smarshorbs/aws-terragrunt@2.2.0
+  aws-cli: circleci/aws-cli@2.0.3
 jobs:
-  terraform:
-    executor: aws-terragrunt/default
+  terragrunt:
+    docker:
+      - image: fomiller/megatainer:latest
     steps:
-      - aws-terragrunt/set-up:
-          aws-access-key-id: AWS_ACCESS_KEY_ID_DEV
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY_ID_DEV 
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY_DEV
-          aws-region: AWS_REGION
-          tf-version: "1.3.6"
-      - run: cd ./us-east-1/dev/
-      - run: terragrunt run-all validate
-      - run: terragrunt run-all plan
-      - run: terragrunt run-all apply --terragrunt-non-interactive
-        
-        
+      - checkout
+      - run:
+          working_directory: us-east-1/dev/
+          command: |
+            terragrunt run-all validate
+            terragrunt run-all plan
+            terragrunt run-all apply --terragrunt-non-interactive
+          
 workflows:
-  terraform:
+  version: 2
+  Terraform Deploy:
     jobs:
-      - terraform:
+      - terragrunt:
           context:
             - aws-credentials
