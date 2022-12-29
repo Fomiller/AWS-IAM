@@ -70,11 +70,10 @@ jobs:
 
     steps:
     - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
-        aws-region: us-east-1
+      run: |
+        aws configure set aws_access_key_id ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }} --profile saml
+        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }} --profile saml          
+    
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v2
@@ -109,7 +108,6 @@ jobs:
     - name: Terragrunt Plan
       continue-on-error: false
       env:
-        AWS_DEFAULT_PROFILE: default
         TF_VAR_username: superman
       run: |
         cd us-east-1/dev
@@ -117,7 +115,6 @@ jobs:
         
     - name: Terragrunt Apply
       env:
-        AWS_DEFAULT_PROFILE: default
         TF_VAR_username: superman
       continue-on-error: false
       run: |
