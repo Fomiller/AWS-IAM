@@ -1,4 +1,4 @@
-skip = true
+/* skip = true */
 locals {
   account_vars      = read_terragrunt_config(find_in_parent_folders("account.hcl"))
   environment_vars = read_terragrunt_config(find_in_parent_folders("environment.hcl"))
@@ -9,7 +9,7 @@ locals {
 
 terraform {
 
-  source = "../../../modules/aws//policies"
+  source = "../../../modules/aws//secrets"
 }
 
 include "root" {
