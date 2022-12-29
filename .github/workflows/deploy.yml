@@ -65,13 +65,11 @@ jobs:
   terragrunt:
     name: 'Terragrunt'
     runs-on: ubuntu-latest
-    env:
-      AWS_DEFAULT_PROFILE: default
 
     steps:
     - name: Configure AWS Credentials
       run: |
-        aws configure set aws_access_key_id ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }} --profile saml
+        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID_DEV }} --profile saml
         aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }} --profile saml          
     
     # Checkout the repository to the GitHub Actions runner
