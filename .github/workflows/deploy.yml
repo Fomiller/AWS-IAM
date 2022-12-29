@@ -95,6 +95,7 @@ jobs:
       continue-on-error: false
       run: |
         cd us-east-1/dev
+        env
         terragrunt run-all validate
         
     - name: Terragrunt Init
