@@ -6,7 +6,7 @@ defaults: &defaults
     docker:
       - image: fomiller/megatainer:latest
     environment:
-      TF_VAR_username: TF_VAR_USERNAME
+      TF_VAR_username: $MY_ENV_VAR
   
 jobs:
   aws login:
