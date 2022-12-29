@@ -11,7 +11,7 @@ generate provider {
 provider "aws" {
   version = "~>4.0"
   region = "us-east-1"
-  profile = "default"
+  profile = "saml"
   default_tags {
     tags = {
       email = "forrestmillerj@gmail.com"
