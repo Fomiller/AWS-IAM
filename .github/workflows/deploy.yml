@@ -87,7 +87,7 @@ jobs:
       run: terraform --version
     - name: Setup Terraform wrapper path
       run: which terraform
-    - name: Setup Terragrunt v0.38.4
+    - name: Setup Terragrunt v0.36.1
       # env:
       #   # TF_VAR_test: 123
 
