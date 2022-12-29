@@ -113,11 +113,15 @@ jobs:
         
     - name: Terragrunt Plan
       continue-on-error: false
+      env:
+        TF_VAR_username: superman
       run: |
         cd us-east-1/dev
         terragrunt run-all plan
         
     - name: Terragrunt Apply
+      env:
+        TF_VAR_username: superman
       continue-on-error: false
       run: |
         cd us-east-1/dev
