@@ -7,54 +7,113 @@ on:
       - 'master'
       - 'develop'
       - 'actions'
-env:
-  tf_version: 'latest'
-  tg_version: 'v0.36.1'
-  tf_working_dir: 'us-east-1/dev/'
-    
+# env:
+#   tf_version: 'latest'
+#   tg_version: 'v0.36.1'
+#   tf_working_dir: 'us-east-1/dev/'
+#     
+# jobs:
+#   terragrunt:
+#     name: 'Terragrunt'
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Configure AWS Credentials
+#         uses: aws-actions/configure-aws-credentials@v1
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
+#           aws-region: us-east-1
+#       - name: 'Checkout'
+#         uses: actions/checkout@master
+#       - name: 'Terragrunt Init'
+#         uses: the-commons-project/terragrunt-github-actions@master
+#         with:
+#           tf_actions_version: ${{ env.tf_version }}
+#           tg_actions_version: ${{ env.tg_version }}
+#           tf_actions_binary: 'terragrunt'
+#           tf_actions_subcommand: 'init'
+#           tf_actions_working_dir: ${{ env.tf_working_dir }}
+#           tf_actions_comment: true
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#       - name: 'Terragrunt Validate'
+#         uses: the-commons-project/terragrunt-github-actions@master
+#         with:
+#           tf_actions_version: ${{ env.tf_version }}
+#           tg_actions_version: ${{ env.tg_version }}
+#           tf_actions_binary: 'terragrunt'
+#           tf_actions_subcommand: 'validate'
+#           tf_actions_working_dir: ${{ env.tf_working_dir }}
+#           tf_actions_comment: true
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#       - name: 'Terragrunt Plan'
+#         uses: the-commons-project/terragrunt-github-actions@master
+#         with:
+#           tf_actions_version: ${{ env.tf_version }}
+#           tg_actions_version: ${{ env.tg_version }}
+#           tf_actions_binary: 'terragrunt'
+#           tf_actions_subcommand: 'plan'
+#           tf_actions_working_dir: ${{ env.tf_working_dir }}
+#           tf_actions_comment: true
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+# name: 'Terragrunt CI'
+
+
 jobs:
-  terragrunt:
+  Terragrunt:
     name: 'Terragrunt'
     runs-on: ubuntu-latest
+
     steps:
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
-          aws-region: us-east-1
-      - name: 'Checkout'
-        uses: actions/checkout@master
-      - name: 'Terragrunt Init'
-        uses: the-commons-project/terragrunt-github-actions@master
-        with:
-          tf_actions_version: ${{ env.tf_version }}
-          tg_actions_version: ${{ env.tg_version }}
-          tf_actions_binary: 'terragrunt'
-          tf_actions_subcommand: 'init'
-          tf_actions_working_dir: ${{ env.tf_working_dir }}
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: 'Terragrunt Validate'
-        uses: the-commons-project/terragrunt-github-actions@master
-        with:
-          tf_actions_version: ${{ env.tf_version }}
-          tg_actions_version: ${{ env.tg_version }}
-          tf_actions_binary: 'terragrunt'
-          tf_actions_subcommand: 'validate'
-          tf_actions_working_dir: ${{ env.tf_working_dir }}
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: 'Terragrunt Plan'
-        uses: the-commons-project/terragrunt-github-actions@master
-        with:
-          tf_actions_version: ${{ env.tf_version }}
-          tg_actions_version: ${{ env.tg_version }}
-          tf_actions_binary: 'terragrunt'
-          tf_actions_subcommand: 'plan'
-          tf_actions_working_dir: ${{ env.tf_working_dir }}
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # Install the latest version of Terragrunt CLI and configure the Terragrunt CLI configuration file with a Terragrunt Cloud user API toke
+    - name: Setup Terraform
+      uses: hashicorp/setup-Terraform@v1
+      with:
+        terraform_version: latest
+        terraform_wrapper: false
+    - name: Setup Terraform version
+      run: terraform --version
+    - name: Setup Terraform wrapper path
+      run: which terraform
+    - name: Setup Terragrunt v0.38.4
+      env:
+        # TF_VAR_test: 123
+
+      run: |
+        sudo wget -q -O /bin/terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v0.38.4/terragrunt_linux_amd64"
+        sudo chmod +x /bin/terragrunt
+        cd alpha/environments/pro
+        #terragrunt run-all plan --terragrunt-non-interactive
+        #terragrunt run-all apply --terragrunt-non-interactive
+        #terragrunt run-all destroy --terragrunt-non-interactive
+        # 
+    # Initialize a new or existing Terragrunt working directory by creating initial files,  loading any remote state, downloading modules, etc.
+    - name: Terragrunt Validate
+      continue-on-error: false
+      run: |
+        cd us-east-1/dev
+        terragrunt run-all validate
+        
+    - name: Terragrunt Init
+      continue-on-error: false
+      run: |
+        cd us-east-1/dev
+        terragrunt run-all init
+        
+    - name: Terragrunt Plan
+      continue-on-error: false
+      run: |
+        cd us-east-1/dev
+        terragrunt run-all plan
+        
+    - name: Terragrunt Apply
+      continue-on-error: false
+      run: |
+        cd us-east-1/dev
+        terragrunt run-all apply --terragrunt-non-interactive
