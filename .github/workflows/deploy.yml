@@ -6,79 +6,21 @@ on:
     branches:
       - 'master'
       - 'develop'
-      - 'actions'
-# env:
-#   tf_version: 'latest'
-#   tg_version: 'v0.36.1'
-#   tf_working_dir: 'us-east-1/dev/'
-#     
-# jobs:
-#   terragrunt:
-#     name: 'Terragrunt'
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Configure AWS Credentials
-#         uses: aws-actions/configure-aws-credentials@v1
-#         with:
-#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
-#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
-#           aws-region: us-east-1
-#       - name: 'Checkout'
-#         uses: actions/checkout@master
-#       - name: 'Terragrunt Init'
-#         uses: the-commons-project/terragrunt-github-actions@master
-#         with:
-#           tf_actions_version: ${{ env.tf_version }}
-#           tg_actions_version: ${{ env.tg_version }}
-#           tf_actions_binary: 'terragrunt'
-#           tf_actions_subcommand: 'init'
-#           tf_actions_working_dir: ${{ env.tf_working_dir }}
-#           tf_actions_comment: true
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#       - name: 'Terragrunt Validate'
-#         uses: the-commons-project/terragrunt-github-actions@master
-#         with:
-#           tf_actions_version: ${{ env.tf_version }}
-#           tg_actions_version: ${{ env.tg_version }}
-#           tf_actions_binary: 'terragrunt'
-#           tf_actions_subcommand: 'validate'
-#           tf_actions_working_dir: ${{ env.tf_working_dir }}
-#           tf_actions_comment: true
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#       - name: 'Terragrunt Plan'
-#         uses: the-commons-project/terragrunt-github-actions@master
-#         with:
-#           tf_actions_version: ${{ env.tf_version }}
-#           tg_actions_version: ${{ env.tg_version }}
-#           tf_actions_binary: 'terragrunt'
-#           tf_actions_subcommand: 'plan'
-#           tf_actions_working_dir: ${{ env.tf_working_dir }}
-#           tf_actions_comment: true
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-# name: 'Terragrunt CI'
-
-
+      - '*'
+        
 jobs:
   terragrunt:
     name: 'Terragrunt'
     runs-on: ubuntu-latest
     env:
-      TF_VAR_username: superman
+      TF_VAR_username: ${{secrets.USERNAME}}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
       AWS_PROFILE: saml
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_DEFAULT_OUTPUT: json
 
     steps:
-    # - name: Configure AWS Credentials
-    #   uses: aws-actions/configure-aws-credentials@v1
-    #   with:
-    #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
-    #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
-    #     aws-region: us-east-1
-          
     - name: AWS    
       run: |
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID_DEV }} --profile saml
@@ -89,41 +31,44 @@ jobs:
       uses: actions/checkout@v2
 
     # Install the latest version of Terragrunt CLI and configure the Terragrunt CLI configuration file with a Terragrunt Cloud user API toke
-    - name: Setup Terraform
+    - name: Install Terraform
       uses: hashicorp/setup-Terraform@v1
       with:
         terraform_version: latest
           
-    - name: Setup Terragrunt v0.36.1
+    - name: Install Terragrunt v0.36.1
       run: |
         sudo wget -q -O /bin/terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v0.36.1/terragrunt_linux_amd64"
         sudo chmod +x /bin/terragrunt
-        #terragrunt run-all plan --terragrunt-non-interactive
-        #terragrunt run-all apply --terragrunt-non-interactive
-        #terragrunt run-all destroy --terragrunt-non-interactive
-        # 
+
     # Initialize a new or existing Terragrunt working directory by creating initial files,  loading any remote state, downloading modules, etc.
-    # - name: Terragrunt Validate
-    #   continue-on-error: false
-    #   run: |
-    #     cd us-east-1/dev
-    #     terragrunt run-all validate
-    #     
-    # - name: Terragrunt Init
-    #   continue-on-error: false
-    #   run: |
-    #     cd us-east-1/dev
-    #     terragrunt run-all init
+    - name: Terragrunt Validate
+      continue-on-error: false
+      run: |
+        cd us-east-1/dev
+        terragrunt run-all validate
+        
+    - name: Terragrunt Init
+      continue-on-error: false
+      run: |
+        cd us-east-1/dev
+        terragrunt run-all init
         
     - name: Terragrunt Plan
-      uses: lhotari/action-upterm@v1
       continue-on-error: false
-      # run: |
-      #   cd us-east-1/dev
-      #   terragrunt run-all plan
+      run: |
+        cd us-east-1/dev
+        terragrunt run-all plan
         
     - name: Terragrunt Apply
       continue-on-error: false
       run: |
         cd us-east-1/dev
         terragrunt run-all apply --terragrunt-non-interactive
+        
+    # use if you need to debug workflow
+    # - name: DEBUG
+    #   uses: lhotari/action-upterm@v1
+    #   with:
+    #       limit-access-to-actor: true
+          # limit-access-to-users: Fomiller
