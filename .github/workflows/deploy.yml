@@ -6,6 +6,7 @@ on:
     branches:
       - 'master'
       - 'develop'
+      - 'actions'
 env:
   tf_version: 'latest'
   tg_version: 'latest'
