@@ -16,6 +16,12 @@ jobs:
           aws-access-key-id: AWS_ACCESS_KEY_ID 
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           profile-name: default
+      - run:
+          name: set tf vars
+          command: |
+            echo "export TF_VAR_username=$MY_ENV_VAR" >> myvars.env
+            echo "$TF_VAR_username"
+            cat 
       - persist_to_workspace:
           root: ../
           paths:
@@ -30,7 +36,10 @@ jobs:
           at: ../
       - run:
           working_directory: us-east-1/dev/
-          command: terragrunt run-all validate
+          command: |
+            cat myvars.env >> $BASH_ENV
+            env
+            terragrunt run-all validate
       - persist_to_workspace:
           root: ../
           paths:
@@ -44,7 +53,10 @@ jobs:
           at: ../
       - run:
           working_directory: us-east-1/dev/
-          command: terragrunt run-all plan
+          command: |
+            cat myvars.env >> $BASH_ENV
+            env
+            terragrunt run-all plan
       - persist_to_workspace:
           root: ../
           paths:
@@ -58,7 +70,10 @@ jobs:
           at: ../
       - run:
           working_directory: us-east-1/dev/
-          command: terragrunt run-all apply --terragrunt-non-interactive
+          command: |
+            cat myvars.env >> $BASH_ENV
+            env
+            terragrunt run-all apply --terragrunt-non-interactive
           
 workflows:
   version: 2
