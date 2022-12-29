@@ -19,7 +19,7 @@ jobs:
       - run:
           name: set tf vars
           command: |
-            echo "export TF_VAR_username=${MY_ENV_VAR}" >> myvars.env
+            echo 'export TF_VAR_username="$MY_ENV_VAR"' >> ../myvars.env
             echo "$TF_VAR_username"
             ls -la
       - persist_to_workspace:
@@ -37,7 +37,7 @@ jobs:
       - run:
           working_directory: us-east-1/dev/
           command: |
-            cat myvars.env >> $BASH_ENV
+            cat ../myvars.env >> $BASH_ENV
             env
             terragrunt run-all validate
       - persist_to_workspace:
@@ -54,7 +54,7 @@ jobs:
       - run:
           working_directory: us-east-1/dev/
           command: |
-            cat myvars.env >> $BASH_ENV
+            cat ../myvars.env >> $BASH_ENV
             env
             terragrunt run-all plan
       - persist_to_workspace:
@@ -71,7 +71,7 @@ jobs:
       - run:
           working_directory: us-east-1/dev/
           command: |
-            cat myvars.env >> $BASH_ENV
+            cat ../myvars.env >> $BASH_ENV
             env
             terragrunt run-all apply --terragrunt-non-interactive
           
