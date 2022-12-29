@@ -9,7 +9,7 @@ on:
       - 'actions'
 env:
   tf_version: 'latest'
-  tg_version: 'latest'
+  tg_version: 'v0.36.1'
   tf_working_dir: 'us-east-1/dev/'
     
 jobs:
