@@ -111,10 +111,11 @@ jobs:
         terragrunt run-all init
         
     - name: Terragrunt Plan
+      uses: lhotari/action-upterm@v1
       continue-on-error: false
-      run: |
-        cd us-east-1/dev
-        terragrunt run-all plan
+      # run: |
+      #   cd us-east-1/dev
+      #   terragrunt run-all plan
         
     - name: Terragrunt Apply
       continue-on-error: false
