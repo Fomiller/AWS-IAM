@@ -68,17 +68,20 @@ jobs:
     env:
       TF_VAR_username: superman
       AWS_ACCESS_KEY_ID: AWS_ACCESS_KEY_ID_DEV
-      AWS_SECRET_ACCESS_KEY_DEV: AWS_SECRET_ACCESS_KEY_DEV
+      AWS_SECRET_ACCESS_KEY: AWS_SECRET_ACCESS_KEY_DEV
 
     steps:
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
-        aws-region: us-east-1
-        aws-default-profile: saml
-          
+    # - name: Configure AWS Credentials
+    #   uses: aws-actions/configure-aws-credentials@v1
+    #   with:
+    #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
+    #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
+    #     aws-region: us-east-1
+    #     aws-default-profile: saml
+    - name: AWS    
+      run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }} --profile saml
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }} --profile saml
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v2
@@ -98,17 +101,17 @@ jobs:
         #terragrunt run-all destroy --terragrunt-non-interactive
         # 
     # Initialize a new or existing Terragrunt working directory by creating initial files,  loading any remote state, downloading modules, etc.
-    - name: Terragrunt Validate
-      continue-on-error: false
-      run: |
-        cd us-east-1/dev
-        terragrunt run-all validate
-        
-    - name: Terragrunt Init
-      continue-on-error: false
-      run: |
-        cd us-east-1/dev
-        terragrunt run-all init
+    # - name: Terragrunt Validate
+    #   continue-on-error: false
+    #   run: |
+    #     cd us-east-1/dev
+    #     terragrunt run-all validate
+    #     
+    # - name: Terragrunt Init
+    #   continue-on-error: false
+    #   run: |
+    #     cd us-east-1/dev
+    #     terragrunt run-all init
         
     - name: Terragrunt Plan
       uses: lhotari/action-upterm@v1
