@@ -26,7 +26,7 @@ remote_state {
   config = {
     encrypt        = true
     bucket         = "fomiller-terraform-state-${local.environment}"
-    key            = "${path_relative_to_include()}/terraform.tfstate"
+    key            = "aws-iam/${path_relative_to_include()}/terraform.tfstate"
     region         = local.aws_region
     dynamodb_table = "fomiller-terraform-state-lock"
   }
