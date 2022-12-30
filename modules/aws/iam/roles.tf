@@ -1,11 +1,11 @@
 resource "aws_iam_role" "test_role" {
   name               = "testRole"
-  assume_role_policy = aws_iam_policy.lambda_assume_policy.policy
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_policy.json
 }
 
 resource "aws_iam_role" "congocoon_lambda_role" {
     name               = "LambdaHelloWorld"
-    assume_role_policy = aws_iam_policy.lambda_assume_policy.policy
+    assume_role_policy = data.aws_iam_policy_document.lambda_assume_policy.json
 }
 
 resource "aws_iam_role_policy_attachment" "test_policy" {

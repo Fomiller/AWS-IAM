@@ -27,26 +27,16 @@ resource "aws_iam_policy" "test_policy" {
 })
 }
 
-resource "aws_iam_policy" "lambda_assume_policy" {
-  name        = "test_policy"
-  path        = "/"
-  description = "My test policy"
-
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression result to valid JSON syntax.
-  policy = jsonencode({
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
+data "aws_iam_policy_document" "lambda_assume_policy" {
+    statement {
+    sid = "STSassumeRole"
+    effect = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type = "Service"
+      identifiers = ["lambda.amazonaws.com"]
     }
-  ]
-})
+  }
 }
 
 resource "aws_iam_policy" "hello_world_lambda_role_policy" {
