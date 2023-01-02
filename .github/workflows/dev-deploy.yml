@@ -38,7 +38,7 @@ jobs:
             
   deploy-aws-infra:
     needs: pre-check
-    if: ${{ github.event.pull_request.merged == true || github.event_name == 'push' }} && ${{ needs.pre-check.outputs.should_skip != 'true' }}
+    if: ${{ (github.event.pull_request.merged == true || github.event_name == 'push') && needs.pre-check.outputs.should_skip != 'true' }}
     name: 'Deploy AWS Infra DEV'
     runs-on: ubuntu-latest
     env:
