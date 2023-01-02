@@ -1,8 +1,3 @@
-resource "aws_iam_role" "test_role" {
-  name               = "testRole"
-  assume_role_policy = data.aws_iam_policy_document.lambda_assume_policy.json
-}
-
 resource "aws_iam_role" "hello_world_lambda_role" {
     name               = "LambdaHelloWorld"
     assume_role_policy = data.aws_iam_policy_document.lambda_assume_policy.json
