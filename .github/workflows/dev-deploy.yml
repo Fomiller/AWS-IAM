@@ -70,7 +70,7 @@ jobs:
       continue-on-error: false
       run: |
         terragrunt run-all apply --terragrunt-working-dir ${{env.INFRA_DIR}} --terragrunt-non-interactive
- 
+
     # use if you need to debug workflow
     # - name: DEBUG
     #   uses: lhotari/action-upterm@v1

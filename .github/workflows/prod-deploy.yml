@@ -33,7 +33,6 @@ jobs:
       AWS_DEFAULT_OUTPUT: json
       INFRA_DIR: us-east-1/prod
 
-
     steps:
     - name: AWS    
       run: |
@@ -69,7 +68,7 @@ jobs:
       continue-on-error: false
       run: |
         terragrunt run-all apply --terragrunt-working-dir ${{env.INFRA_DIR}} --terragrunt-non-interactive
- 
+
         
     # use if you need to debug workflow
     # - name: DEBUG
@@ -77,5 +76,3 @@ jobs:
     #   with:
     #       limit-access-to-actor: true
           # limit-access-to-users: Fomiller
-
-
