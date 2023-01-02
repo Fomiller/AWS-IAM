@@ -12,9 +12,17 @@ on:
       - 'main'
       - 'master'
         
+  pull_request:
+    types:
+      - "closed"
+    branches:
+      - 'main'
+      - 'master'
+        
 jobs:
-  terragrunt:
-    name: 'Terragrunt'
+  deploy-aws-infra:
+    if: github.event.pull_request.merged == true || github.event_name == 'push'
+    name: 'Deploy AWS Infra PROD'
     runs-on: ubuntu-latest
     env:
       TF_VAR_username: ${{secrets.USERNAME}}
