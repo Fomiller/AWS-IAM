@@ -32,8 +32,8 @@ jobs:
         with:
           cancel_others: 'true'
           concurrent_skipping: 'always'
+          do_not_skip: '["pull_request"]'
         #   skip_after_successful_duplicate: 'true'
-        #   do_not_skip: '["pull_request"]'
           
             
   deploy-aws-infra:
