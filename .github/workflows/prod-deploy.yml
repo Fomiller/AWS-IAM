@@ -1,6 +1,6 @@
 # .github/workflows/prod-deploy.yml
 
-name: 'Terragrunt Deploy'
+name: 'Terragrunt Deploy PROD'
   
 on:
   push:
