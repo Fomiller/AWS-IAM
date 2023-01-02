@@ -9,17 +9,15 @@ on:
       - 'modules/**'
       - 'us-east-1/**'
     branches:
-      - '**' # matches every branch
-      - '!main' # excludes main
-      - '!master' #excludes master
+      - 'main' 
+      - 'master'
         
   pull_request:
     types:
       - "closed"
     branches:
-      - '**' # matches every branch
-      - '!main' # excludes main
-      - '!master' #excludes master
+      - 'main' 
+      - 'master'
         
 jobs:
   deploy-aws-infra:
