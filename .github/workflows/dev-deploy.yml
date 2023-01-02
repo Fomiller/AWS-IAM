@@ -29,10 +29,12 @@ jobs:
     steps:
       - id: skip_check
         uses: fkirc/skip-duplicate-actions@v5
+        with:
+          cancel_others: false
           
   deploy-aws-infra:
     needs: pre-check
-    if: ${{ github.event.pull_request.merged == true || github.event_name == 'push' }} && ${{ needs.pre-check.outputs.should_skip != true }}
+    if: ${{ github.event.pull_request.merged == true || github.event_name == 'push' }} && ${{ needs.pre-check.outputs.should_skip != 'true' }}
     name: 'Deploy AWS Infra DEV'
     runs-on: ubuntu-latest
     env:
