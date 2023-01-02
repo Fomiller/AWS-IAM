@@ -55,30 +55,21 @@ jobs:
         sudo wget -q -O /bin/terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v0.36.1/terragrunt_linux_amd64"
         sudo chmod +x /bin/terragrunt
 
-    # Initialize a new or existing Terragrunt working directory by creating initial files,  loading any remote state, downloading modules, etc.
     - name: Terragrunt Validate
       continue-on-error: false
       run: |
-        cd ${{ env.INFRA_DIR }}
-        terragrunt run-all validate
-        
-    - name: Terragrunt Init
-      continue-on-error: false
-      run: |
-        cd ${{ env.INFRA_DIR }}
-        terragrunt run-all init
+        terragrunt run-all validate --terragrunt-working-dir ${{env.INFRA_DIR}} --terragrunt-non-interactive
         
     - name: Terragrunt Plan
       continue-on-error: false
       run: |
-        cd ${{ env.INFRA_DIR }}
-        terragrunt run-all plan
+        terragrunt run-all plan --terragrunt-working-dir ${{env.INFRA_DIR}} --terragrunt-non-interactive
         
     - name: Terragrunt Apply
       continue-on-error: false
       run: |
-        cd ${{ env.INFRA_DIR }}
-        terragrunt run-all apply --terragrunt-non-interactive
+        terragrunt run-all apply --terragrunt-working-dir ${{env.INFRA_DIR}} --terragrunt-non-interactive
+ 
         
     # use if you need to debug workflow
     # - name: DEBUG
