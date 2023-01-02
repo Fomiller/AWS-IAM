@@ -33,7 +33,6 @@ jobs:
           cancel_others: 'true'
           skip_after_successful_duplicate: 'true'
           concurrent_skipping: 'same_content_newer'
-          do_not_skip: '["pull_request"]'
           
             
   deploy-aws-infra:
