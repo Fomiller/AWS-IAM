@@ -9,15 +9,17 @@ on:
       - 'modules/**'
       - 'us-east-1/**'
     branches:
-      - 'main'
-      - 'master'
+      - '**' # matches every branch
+      - '!main' # excludes main
+      - '!master' #excludes master
         
   pull_request:
     types:
       - "closed"
     branches:
-      - 'main'
-      - 'master'
+      - '**' # matches every branch
+      - '!main' # excludes main
+      - '!master' #excludes master
         
 jobs:
   deploy-aws-infra:
@@ -31,6 +33,8 @@ jobs:
       AWS_PROFILE: saml
       AWS_DEFAULT_REGION: us-east-1
       AWS_DEFAULT_OUTPUT: json
+      INFRA_DIR: us-east-1/prod
+
 
     steps:
     - name: AWS    
@@ -57,25 +61,25 @@ jobs:
     - name: Terragrunt Validate
       continue-on-error: false
       run: |
-        cd us-east-1/prod
+        cd ${{ env.INFRA_DIR }}
         terragrunt run-all validate
         
     - name: Terragrunt Init
       continue-on-error: false
       run: |
-        cd us-east-1/prod
+        cd ${{ env.INFRA_DIR }}
         terragrunt run-all init
         
     - name: Terragrunt Plan
       continue-on-error: false
       run: |
-        cd us-east-1/prod
+        cd ${{ env.INFRA_DIR }}
         terragrunt run-all plan
         
     - name: Terragrunt Apply
       continue-on-error: false
       run: |
-        cd us-east-1/prod
+        cd ${{ env.INFRA_DIR }}
         terragrunt run-all apply --terragrunt-non-interactive
         
     # use if you need to debug workflow
