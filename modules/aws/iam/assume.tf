@@ -12,9 +12,12 @@ data "aws_iam_policy_document" "lambda_assume_policy" {
 
 data "aws_iam_policy_document" "aws_terraform_assume_policy" {
   statement {
-    sid     = "STSassumeRole"
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
+    sid    = "STSassumeRole"
+    effect = "Allow"
+    actions = [
+      "sts:AssumeRole",
+      "sts:TagSession"
+    ]
     principals {
       type        = "AWS"
       identifiers = [data.aws_iam_user.aws_terraform.arn]
