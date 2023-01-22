@@ -64,11 +64,11 @@ jobs:
       uses: actions/checkout@v2
 
     # use if you need to debug workflow
-    - name: DEBUG
-      uses: lhotari/action-upterm@v1
-      with:
-         limit-access-to-actor: true
-         limit-access-to-users: Fomiller
+    # - name: DEBUG
+    #   uses: lhotari/action-upterm@v1
+    #   with:
+    #      limit-access-to-actor: true
+    #      limit-access-to-users: Fomiller
             
     # Install the latest version of Terragrunt CLI and configure the Terragrunt CLI configuration file with a Terragrunt Cloud user API toke
     - name: Install Terraform ${{env.TF_VERSION}}
