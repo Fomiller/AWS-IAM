@@ -19,7 +19,7 @@ terraform {
 
 provider "aws" {
   region = "us-east-1"
-  profile = "saml"
+  profile = "default"
   default_tags {
       tags = {
           email = "forrestmillerj@gmail.com"
