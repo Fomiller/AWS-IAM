@@ -19,7 +19,6 @@ terraform {
 
 provider "aws" {
   region = "us-east-1"
-  profile = "saml"
   default_tags {
       tags = {
           email = "forrestmillerj@gmail.com"
@@ -48,6 +47,8 @@ inputs = merge(
   local.region_vars.locals,
   {
     app_prefix = "fomiller"
+    environment = local.environment,
+    region = local.aws_region,
     extra_tags = {
     }
   }
