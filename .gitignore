@@ -1,6 +1,9 @@
 # environment vars
 **/env.list
+**/aws.sh
 
 #terraform
 *.terraform
 */**/.terragrunt-cache/
+**/backend.tf
+**/provider.tf
