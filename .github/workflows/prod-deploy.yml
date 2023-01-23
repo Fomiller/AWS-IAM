@@ -40,7 +40,7 @@ jobs:
       TF_VAR_username: ${{secrets.USERNAME}}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
-      AWS_PROFILE: saml
+      # AWS_PROFILE: saml
       AWS_DEFAULT_REGION: us-east-1
       AWS_DEFAULT_OUTPUT: json
       INFRA_DIR: us-east-1/prod
@@ -48,10 +48,14 @@ jobs:
       TG_VERSION: v0.42.8  
 
     steps:
-    - name: AWS    
-      run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID_PROD }} --profile saml
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }} --profile saml
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
+        aws-region: ${{ env.AWS_DEFAULT_REGION }}
+        role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_PROD }}
+        role-duration-seconds: 1200
 
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
