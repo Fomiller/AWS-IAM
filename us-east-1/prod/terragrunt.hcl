@@ -47,6 +47,8 @@ inputs = merge(
   local.region_vars.locals,
   {
     app_prefix = "fomiller"
+    environment = local.environment,
+    region = local.aws_region,
     extra_tags = {
     }
   }
