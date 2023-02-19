@@ -23,7 +23,7 @@ resource "aws_iam_role" "eventbridge_ecs_role" {
   assume_role_policy = data.aws_iam_policy_document.eventbridge_assume_policy.json
 }
 
-# resource "aws_iam_role_policy_attachment" "ecs_events" {
-#   role       = aws_iam_role.aws_terraform.name
-#   policy_arn = data.aws_iam_policy.admin_access.arn
-# }
+resource "aws_iam_role_policy_attachment" "ecs_events" {
+  role       = aws_iam_role.eventbridge_ecs_role.name
+  policy_arn = aws_iam_policy.ecs_events_run_task_with_any_role.arn
+}

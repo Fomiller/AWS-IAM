@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "hello_world_lambda_role_policy" {
-  name        = "LambdaHelloWorldPolicy"
+  name        = "LambdaHelloWorldPermission"
   description = "IAM Policy for LambdaHelloWorld"
   policy = jsonencode({
     "Version" : "2012-10-17",
@@ -27,5 +27,28 @@ resource "aws_iam_policy" "hello_world_lambda_role_policy" {
       }
     ]
   })
+}
+
+resource "aws_iam_policy" "ecs_events_run_task_with_any_role" {
+  name        = "EcsRunTaskPermission"
+  description = "Policy for Running chat stat ECS tasks "
+
+  policy = <<DOC
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "iam:PassRole",
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "ecs:RunTask",
+            "Resource": "arn:aws:ecs:${data.aws_caller_identity.current.region}:${data.aws_caller_identity.current.account}:task-definition/fomiller-chat-stat"
+        }
+    ]
+}
+DOC
 }
 
