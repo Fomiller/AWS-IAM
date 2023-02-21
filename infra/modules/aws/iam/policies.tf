@@ -45,7 +45,7 @@ resource "aws_iam_policy" "ecs_events_run_task_with_any_role" {
         {
             "Effect": "Allow",
             "Action": "ecs:RunTask",
-            "Resource": "arn:aws:ecs:${data.aws_caller_identity.current.region}:${data.aws_caller_identity.current.account}:task-definition/fomiller-chat-stat"
+            "Resource": "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:task-definition/fomiller-chat-stat"
         }
     ]
 }
