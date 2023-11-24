@@ -53,7 +53,9 @@ variable "app_prefix" {
 variable "namespace" {
     type = string
     default = "${local.namespace}"
- "asset_name" {
+}
+
+variable "asset_name" {
     type = string
 }
 EOF
