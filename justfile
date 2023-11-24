@@ -18,5 +18,15 @@ init-all env:
 fmt:
     terraform fmt --recursive
 
+apply-all env:
+    terragrunt run-all apply --terragrunt-working-dir {{infraDir}}{{env}}
+    
 validate env:
     terragrunt run-all validate --terragrunt-working-dir {{infraDir}}{{env}}
+
+destroy env dir:
+    doppler run \
+    --name-transformer tf-var  \
+    -- terragrunt destroy \
+    --terragrunt-working-dir {{infraDir}}/{{env}}/{{dir}}
+
