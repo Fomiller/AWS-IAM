@@ -28,6 +28,6 @@ jobs:
     with:
       environment: ${{ contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref) && 'prod' || 'dev' }}
       infra-dir: infra/us-east-1/dev/iam
-      doppler-project: aws-iam
+      doppler-project: aws-deployer-roles
     secrets: inherit
 
