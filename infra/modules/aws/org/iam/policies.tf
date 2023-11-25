@@ -9,7 +9,7 @@ data "aws_iam_policy_document" "terraform_role" {
     principals {
       type = "AWS"
       identifiers = [
-        "arn:aws:iam::${var.account_id_dev}:role/${local.terraform_role}"
+        aws_iam_user.terraform_user.arn
       ]
     }
   }
@@ -33,6 +33,6 @@ resource "aws_iam_policy" "cross_account_access" {
 }
 
 resource "aws_iam_group_policy_attachment" "cross_account_access" {
-  group      = aws_iam_group.cross_account_access
+  group      = aws_iam_group.cross_account_access.name
   policy_arn = aws_iam_policy.cross_account_access.arn
 }
