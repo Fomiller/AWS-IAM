@@ -11,7 +11,7 @@ env:
   environment: ${{ contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref) && 'prod' || 'dev' }}
   tf-version: latest
   tg-version: 0.42.8
-  doppler-project: aws-deployer-role
+  doppler-project: aws-deployer-roles
   
 jobs:
   Pre-check:
