@@ -13,7 +13,6 @@ env:
 jobs:
   Pre-check:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
     steps:
@@ -27,7 +26,7 @@ jobs:
     if: ${{ (github.event.pull_request.merged == true || github.event_name == 'push') && needs.pre-check.outputs.should_skip != 'true' }}
     name: 'Deploy AWS Infra'
     runs-on: ubuntu-latest
-    environment: ${{ env.environment }}
+    environment: ${{ contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref) && 'prod' || 'dev' }}
           
     steps:
     - name: Checkout
