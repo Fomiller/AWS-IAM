@@ -26,7 +26,7 @@ jobs:
     needs: Pre-check
     uses: fomiller/gh-actions/.github/workflows/terragrunt.yaml@main
     with:
-      environment: ${{ contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref) && 'prod' || 'dev' }}
+      environment: org
       infra-dir: infra/us-east-1/dev/iam
       doppler-project: aws-deployer-roles
     secrets: inherit

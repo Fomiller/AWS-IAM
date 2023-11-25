@@ -1,7 +1,7 @@
 locals {
     namespace = "fomiller"
-    app_prefix = "aws-iam"
-    project_name = "aws-iam" # this should be aws-deployer-roles
+    app_prefix = "aws-org"
+    project_name = "aws-org" # this should be aws-deployer-roles
 }
 
 generate provider {
@@ -14,7 +14,7 @@ provider "aws" {
     tags = {
       email = "forrestmillerj@gmail.com"
       managedWith = "terraform"
-      repo = "aws-deployer-roles"
+      repo = "${local.project_name}"
     }
   }
 }
