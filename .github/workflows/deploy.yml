@@ -11,6 +11,7 @@ env:
   environment: ${{ contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref) && 'prod' || 'dev' }}
   tf-version: latest
   tg-version: 0.42.8
+  doppler-project: aws-deployer-role
   
 jobs:
   Pre-check:
@@ -49,13 +50,13 @@ jobs:
     - name: Install Just
       uses: extractions/setup-just@v1
         
-    # - name: Install Doppler
-    #   uses: dopplerhq/cli-action@v2
-    #   
-    # - name: Doppler Setup
-    #   run: doppler setup -p ${{env.doppler-project}} -c ${{env.environment}}
-    #   env:
-    #       DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+    - name: Install Doppler
+      uses: dopplerhq/cli-action@v2
+      
+    - name: Doppler Setup
+      run: doppler setup -p ${{env.doppler-project}} -c org
+      env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
           
     - name: Configure AWS Credentials for Org Account 
       uses: aws-actions/configure-aws-credentials@v4
@@ -64,6 +65,11 @@ jobs:
         aws-secret-access-key: ${{ secrets.ADMIN_AWS_SECRET_ACCESS_KEY }} # these need to be the admin secrets always
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
         role-duration-seconds: 1200
+          
+    - name: Doppler Setup
+      run: doppler setup -p ${{env.doppler-project}} -c {{ env.environment }}
+      env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
     - name: Terragrunt Apply Org Account
       continue-on-error: false
