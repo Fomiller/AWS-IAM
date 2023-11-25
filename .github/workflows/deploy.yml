@@ -11,7 +11,7 @@ env:
   environment: ${{ contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref) && 'prod' || 'dev' }}
   tf-version: latest
   tg-version: 0.42.8
-  doppler-project: aws-deployer-roles
+  doppler-project: aws-org
   
 jobs:
   Pre-check:
@@ -54,15 +54,15 @@ jobs:
       uses: dopplerhq/cli-action@v2
       
     - name: Doppler Setup
-      run: doppler setup -p ${{env.doppler-project}} -c org
+      run: doppler setup -p ${{ env.doppler-project }} -c org
       env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
           
     - name: Configure AWS Credentials for Org Account 
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        aws-access-key-id: ${{ secrets.ADMIN_AWS_ACCESS_KEY_ID }} # these need to be the admin secrets always
-        aws-secret-access-key: ${{ secrets.ADMIN_AWS_SECRET_ACCESS_KEY }} # these need to be the admin secrets always
+        aws-access-key-id: ${{ secrets.ADMIN_AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.ADMIN_AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
         role-duration-seconds: 1200
           
@@ -107,11 +107,12 @@ jobs:
     - name: Configure AWS Credentials for ${{ env.environment }} Account 
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} # these need to be the AWSTerraformORG secrets
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # these need to be the AWSTerraformORG secrets
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
         role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_DEPLOYER_ROLE }}
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
         role-duration-seconds: 1200
+        # skipping taggging because OrgAccountAccess account doesnt allow TagSession
         role-skip-session-tagging: true
          
     - name: Terragrunt Apply ${{ env.environment }} Account
