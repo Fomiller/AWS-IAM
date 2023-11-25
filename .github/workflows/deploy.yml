@@ -7,11 +7,15 @@ on:
       - 'modules/**'
       - 'infra/**'
       - 'justfile'
-   
+env:
+  environment: ${{ contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref) && 'prod' || 'dev' }}
+  tf-version: latest
+  tg-version: 0.42.8
+  doppler-project: aws-org
+  
 jobs:
   Pre-check:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
     steps:
@@ -21,13 +25,104 @@ jobs:
           cancel_others: 'true'
           concurrent_skipping: 'same_content_newer'
             
-  Deploy-infra:
-    name: 'Deploy Infra'
+  Deploy-AWS-Org-infra:
     needs: Pre-check
-    uses: fomiller/gh-actions/.github/workflows/terragrunt.yaml@main
-    with:
-      environment: ${{ contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref) && 'prod' || 'dev' }}
-      infra-dir: infra/us-east-1/dev/iam
-      doppler-project: aws-deployer-roles
-    secrets: inherit
-
+    if: ${{ (github.event.pull_request.merged == true || github.event_name == 'push') && needs.pre-check.outputs.should_skip != 'true' }}
+    name: 'Deploy AWS Org Infra'
+    runs-on: ubuntu-latest
+    environment: ${{ contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref) && 'prod' || 'dev' }}
+          
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+        
+    - name: Install Terraform ${{ env.tf-version }}
+      uses: hashicorp/setup-Terraform@v2
+      with:
+        terraform_version: ${{ env.tf-version }}
+        terraform_wrapper: false
+    
+    - name: Install Terragrunt ${{ env.tg-version }}
+      run: |
+        sudo wget -q -O /bin/terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v${{ env.tg-version }}/terragrunt_linux_amd64"
+        sudo chmod +x /bin/terragrunt
+        
+    - name: Install Just
+      uses: extractions/setup-just@v1
+        
+    - name: Install Doppler
+      uses: dopplerhq/cli-action@v2
+      
+    - name: Doppler Setup
+      run: doppler setup -p ${{ env.doppler-project }} -c org
+      env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+          
+    - name: Configure AWS Credentials for Org Account 
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.ADMIN_AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.ADMIN_AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+        role-duration-seconds: 1200
+          
+    - name: Terragrunt Apply Org Account
+      continue-on-error: false
+      run: |
+        just apply org/iam
+        
+  Deploy-AWS-infra:
+    needs: Deploy-AWS-Org-infra
+    if: ${{ (github.event.pull_request.merged == true || github.event_name == 'push') && needs.pre-check.outputs.should_skip != 'true' }}
+    name: 'Deploy AWS Infra'
+    runs-on: ubuntu-latest
+    environment: ${{ contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref) && 'prod' || 'dev' }}
+          
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+        
+    - name: Install Terraform ${{ env.tf-version }}
+      uses: hashicorp/setup-Terraform@v2
+      with:
+        terraform_version: ${{ env.tf-version }}
+        terraform_wrapper: false
+    
+    - name: Install Terragrunt ${{ env.tg-version }}
+      run: |
+        sudo wget -q -O /bin/terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v${{ env.tg-version }}/terragrunt_linux_amd64"
+        sudo chmod +x /bin/terragrunt
+        
+    - name: Install Just
+      uses: extractions/setup-just@v1
+        
+    - name: Install Doppler
+      uses: dopplerhq/cli-action@v2
+      
+    - name: Doppler Setup
+      run: doppler setup -p ${{ env.doppler-project }} -c ${{ env.environment }}
+      env:
+        DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+        
+    - name: Configure AWS Credentials for ${{ env.environment }} Account 
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
+        role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_DEPLOYER_ROLE }}
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+        role-duration-seconds: 1200
+        # skipping taggging because OrgAccountAccess account doesnt allow TagSession
+        role-skip-session-tagging: true
+         
+    - name: Terragrunt Apply ${{ env.environment }} Account
+      continue-on-error: false
+      run: |
+        just apply member/iam
+        
+    # use if you need to debug workflow
+    # - name: DEBUG
+    #   uses: lhotari/action-upterm@v1
+    #   with:
+    #      limit-access-to-actor: true
+    #      limit-access-to-users: Fomiller

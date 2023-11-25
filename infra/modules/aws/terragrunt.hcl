@@ -1,11 +1,11 @@
 locals {
     namespace = "fomiller"
-    app_prefix = "aws-iam"
-    project_name = "aws-iam" # this should be aws-deployer-roles
+    app_prefix = "aws-org"
+    project_name = "aws-org" # this should be aws-deployer-roles
 }
 
 generate provider {
-  path      = "provider.gen.tf"
+  path      = "_.provider.gen.tf"
   if_exists = "overwrite_terragrunt"
   contents  = <<EOF
 provider "aws" {
@@ -14,7 +14,7 @@ provider "aws" {
     tags = {
       email = "forrestmillerj@gmail.com"
       managedWith = "terraform"
-      repo = "aws-deployer-roles"
+      repo = "${local.project_name}"
     }
   }
 }
@@ -22,7 +22,7 @@ EOF
 }
 
 generate versions {
-  path      = "versions.gen.tf"
+  path      = "_.versions.gen.tf"
   if_exists = "overwrite_terragrunt"
   contents  = <<EOF
 terraform {
@@ -38,7 +38,7 @@ EOF
 }
 
 generate variables {
-  path      = "variables.gen.tf"
+  path      = "_.variables.gen.tf"
   if_exists = "overwrite_terragrunt"
   contents  = <<EOF
 variable "environment" {
@@ -72,7 +72,7 @@ remote_state {
     dynamodb_table = "${local.namespace}-terraform-state-lock"
   }
   generate = {
-    path      = "backend.gen.tf"
+    path      = "_.backend.gen.tf"
     if_exists = "overwrite_terragrunt"
   }
 }

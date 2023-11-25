@@ -1,4 +1,4 @@
-data "aws_iam_policy_document" "aws_terraform_assume_policy" {
+data "aws_iam_policy_document" "terraform_role" {
   statement {
     sid    = "STSassumeRole"
     effect = "Allow"
@@ -7,8 +7,11 @@ data "aws_iam_policy_document" "aws_terraform_assume_policy" {
       "sts:TagSession"
     ]
     principals {
-      type        = "AWS"
-      identifiers = [data.aws_iam_user.aws_terraform.arn]
+      type = "AWS"
+      identifiers = [
+        aws_iam_user.terraform_user.arn
+      ]
     }
   }
 }
+
