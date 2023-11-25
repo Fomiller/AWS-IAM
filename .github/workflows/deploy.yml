@@ -66,15 +66,15 @@ jobs:
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
         role-duration-seconds: 1200
           
-    - name: Doppler Setup
-      run: doppler setup -p ${{env.doppler-project}} -c {{ env.environment }}
-      env:
-          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
-
     - name: Terragrunt Apply Org Account
       continue-on-error: false
       run: |
         just apply org/iam
+        
+    - name: Doppler Setup
+      run: doppler setup -p ${{env.doppler-project}} -c ${{ env.environment }}
+      env:
+        DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         
     - name: Configure AWS Credentials for {{ env.environment }} Account 
       uses: aws-actions/configure-aws-credentials@v4
