@@ -85,7 +85,7 @@ jobs:
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
         role-duration-seconds: 1200
         
-    - name: Terragrunt Apply {{ env.environment }} Account
+    - name: Terragrunt Apply ${{ env.environment }} Account
       continue-on-error: false
       run: |
         just apply member/iam
