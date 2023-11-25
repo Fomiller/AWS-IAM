@@ -28,7 +28,7 @@ jobs:
   Deploy-AWS-Org-infra:
     needs: Pre-check
     if: ${{ (github.event.pull_request.merged == true || github.event_name == 'push') && needs.pre-check.outputs.should_skip != 'true' }}
-    name: 'Deploy AWS Infra'
+    name: 'Deploy AWS Org Infra'
     runs-on: ubuntu-latest
     environment: ${{ contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref) && 'prod' || 'dev' }}
           

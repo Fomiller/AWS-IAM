@@ -17,9 +17,12 @@ data "aws_iam_policy_document" "terraform_role" {
 
 data "aws_iam_policy_document" "cross_account_access" {
   statement {
-    sid     = "OrganizationCrossAccount"
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
+    sid    = "OrganizationCrossAccount"
+    effect = "Allow"
+    actions = [
+      "sts:AssumeRole",
+      "sts:TagSession",
+    ]
     resources = [
       "arn:aws:iam::${var.account_id_dev}:role/OrganizationAccountAccessRole",
       "arn:aws:iam::${var.account_id_prod}:role/OrganizationAccountAccessRole"
