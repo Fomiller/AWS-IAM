@@ -112,7 +112,8 @@ jobs:
         role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_DEPLOYER_ROLE }}
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
         role-duration-seconds: 1200
-        
+        role-skip-session-tagging: true
+         
     - name: Terragrunt Apply ${{ env.environment }} Account
       continue-on-error: false
       run: |
