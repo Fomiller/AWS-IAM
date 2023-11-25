@@ -76,7 +76,7 @@ jobs:
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         
-    - name: Configure AWS Credentials for {{ env.environment }} Account 
+    - name: Configure AWS Credentials for ${{ env.environment }} Account 
       uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} # these need to be the AWSTerraformORG secrets
