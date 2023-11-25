@@ -23,6 +23,7 @@ jobs:
           concurrent_skipping: 'same_content_newer'
             
   Deploy-aws-infra:
+    needs: Pre-check
     if: ${{ (github.event.pull_request.merged == true || github.event_name == 'push') && needs.pre-check.outputs.should_skip != 'true' }}
     name: 'Deploy AWS Infra'
     runs-on: ubuntu-latest
