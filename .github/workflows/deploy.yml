@@ -25,7 +25,7 @@ jobs:
           cancel_others: 'true'
           concurrent_skipping: 'same_content_newer'
             
-  Deploy-aws-infra:
+  Deploy-AWS-Org-infra:
     needs: Pre-check
     if: ${{ (github.event.pull_request.merged == true || github.event_name == 'push') && needs.pre-check.outputs.should_skip != 'true' }}
     name: 'Deploy AWS Infra'
@@ -71,8 +71,36 @@ jobs:
       run: |
         just apply org/iam
         
+  Deploy-AWS-infra:
+    needs: Deploy-AWS-Org-infra
+    if: ${{ (github.event.pull_request.merged == true || github.event_name == 'push') && needs.pre-check.outputs.should_skip != 'true' }}
+    name: 'Deploy AWS Infra'
+    runs-on: ubuntu-latest
+    environment: ${{ contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref) && 'prod' || 'dev' }}
+          
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+        
+    - name: Install Terraform ${{ env.tf-version }}
+      uses: hashicorp/setup-Terraform@v2
+      with:
+        terraform_version: ${{ env.tf-version }}
+        terraform_wrapper: false
+    
+    - name: Install Terragrunt ${{ env.tg-version }}
+      run: |
+        sudo wget -q -O /bin/terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v${{ env.tg-version }}/terragrunt_linux_amd64"
+        sudo chmod +x /bin/terragrunt
+        
+    - name: Install Just
+      uses: extractions/setup-just@v1
+        
+    - name: Install Doppler
+      uses: dopplerhq/cli-action@v2
+      
     - name: Doppler Setup
-      run: doppler setup -p ${{env.doppler-project}} -c ${{ env.environment }}
+      run: doppler setup -p ${{ env.doppler-project }} -c ${{ env.environment }}
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         
@@ -96,5 +124,3 @@ jobs:
     #   with:
     #      limit-access-to-actor: true
     #      limit-access-to-users: Fomiller
-          
-
