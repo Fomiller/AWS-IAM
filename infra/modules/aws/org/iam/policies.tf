@@ -21,7 +21,7 @@ data "aws_iam_policy_document" "cross_account_access" {
     effect = "Allow"
     actions = [
       "sts:AssumeRole",
-      "sts:TagSession",
+      "sts:TagSession"
     ]
     resources = [
       "arn:aws:iam::${var.account_id_dev}:role/OrganizationAccountAccessRole",
