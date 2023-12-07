@@ -48,11 +48,11 @@ apply dir:
     -auto-approve \
     --terragrunt-working-dir {{infraDir}}/{{dir}} \
     
-apply-all:
+apply-all dir=infraDir:
     doppler run \
     --name-transformer tf-var  \
     -- terragrunt run-all apply \
-    --terragrunt-working-dir={{infraDir}} \
+    --terragrunt-working-dir={{dir}} \
     --terragrunt-non-interactive
 
 destroy dir:
