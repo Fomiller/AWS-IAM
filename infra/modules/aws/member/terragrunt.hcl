@@ -22,8 +22,8 @@ provider "aws" {
 
 provider "aws" {
   alias = "org"
-  access_key = ${get_env("TF_VAR_admin_access_key_id")}
-  access_key = ${get_env("TF_VAR_admin_access_key_id")}
+  access_key = ${get_env("TF_VAR_aws_admin_access_key_id")}
+  secret_key = ${get_env("TF_VAR_aws_admin_secret_access_key")}
   region = "us-east-1"
   default_tags {
     tags = {
