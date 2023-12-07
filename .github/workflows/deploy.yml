@@ -69,7 +69,7 @@ jobs:
     - name: Terragrunt Apply Org Account
       continue-on-error: false
       run: |
-        just apply org/iam
+        just apply org
         
   Deploy-AWS-infra:
     needs: Deploy-AWS-Org-infra
@@ -118,7 +118,7 @@ jobs:
     - name: Terragrunt Apply ${{ env.environment }} Account
       continue-on-error: false
       run: |
-        just apply member/iam
+        just apply member
         
     # use if you need to debug workflow
     # - name: DEBUG
