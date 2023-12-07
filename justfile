@@ -97,7 +97,7 @@ fmt:
     echo 'include "root" {\n\
     \tpath = find_in_parent_folders()\n\
     }' > {{infraDir}}/{{acct}}/{{dir}}/terragrunt.hcl
-    @# {{infraDir}}/{{dir}} created.
+    @# {{infraDir}}/{{acct}}/{{dir}} created.
 
 @init-member-module dir acct="member":
     mkdir -p {{infraDir}}/{{acct}}/{{dir}}/env-config/us-east-1
@@ -123,4 +123,4 @@ fmt:
     echo 'include "root" {\n\
     \tpath = find_in_parent_folders()\n\
     }' > {{infraDir}}/{{acct}}/{{dir}}/terragrunt.hcl
-    @# {{infraDir}}/{{dir}} created.
+    @# {{infraDir}}/{{acct}}/{{dir}} created.
