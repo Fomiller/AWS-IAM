@@ -1,4 +1,4 @@
 data "aws_route53_zone" "fomiller" {
-  provider = "org"
+  provider = aws.org
   name     = "fomiller.com"
 }
