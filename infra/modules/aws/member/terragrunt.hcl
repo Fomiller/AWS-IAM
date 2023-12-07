@@ -74,10 +74,6 @@ variable "asset_name" {
     type = string
 }
 
-variable "alias" {
-    type = string
-    default = "org"
-}
 EOF
 }
 

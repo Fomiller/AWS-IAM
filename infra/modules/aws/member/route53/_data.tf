@@ -1,4 +1,4 @@
 data "aws_route53_zone" "fomiller" {
-  provider = var.alias
+  provider = "org"
   name     = "fomiller.com"
 }
