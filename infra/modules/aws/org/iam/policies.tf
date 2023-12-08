@@ -39,3 +39,8 @@ resource "aws_iam_group_policy_attachment" "cross_account_access" {
   group      = aws_iam_group.cross_account_access.name
   policy_arn = aws_iam_policy.cross_account_access.arn
 }
+
+resource "aws_iam_group_policy_attachment" "admin_access" {
+  group      = aws_iam_group.admin_access.name
+  policy_arn = data.aws_iam_policy.admin_access.arn
+}

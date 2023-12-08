@@ -8,5 +8,6 @@
 **/backend.tf
 **/provider.tf
 **/*.gen.tf
+**/.terraform.lock.hcl
 
 .aws-assume.ini

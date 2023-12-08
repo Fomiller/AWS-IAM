@@ -2,6 +2,11 @@ set export
 
 infraDir := "infra/modules/aws"
 
+clean:
+    rm -rf infra/modules/**/_.*.gen.tf
+    rm -rf infra/modules/**/.terraform.lock.hcl
+    rm -rf infra/modules/**/.terraform
+
 login env:
     assume-role login -p {{env}}Terraform
 
@@ -62,13 +67,12 @@ destroy dir:
     --terragrunt-working-dir {{infraDir}}/{{dir}} \
     --terragrunt-non-interactive
     
-destroy-all:
+destroy-all dir=infraDir:
     doppler run \
     --name-transformer tf-var  \
-    -- terragrunt run-all \
-    destroy --terragrunt-working-dir {{infraDir}}
+    -- terragrunt run-all destroy \
+    --terragrunt-working-dir={{dir}}
     
-
 fmt:
     doppler run \
     --name-transformer tf-var  \

@@ -66,8 +66,8 @@ remote_state {
   config = {
     encrypt        = true
     disable_bucket_update= true
-    bucket         = "${local.namespace}-terraform-state-${get_env("TF_VAR_environment", "dev")}"
-    key            = "${local.project_name}/${path_relative_to_include()}/terraform.tfstate"
+    bucket         = "${local.namespace}-terraform-state-org"
+    key            = "${local.project_name}/org/${path_relative_to_include()}/terraform.tfstate"
     region         = "${get_env("TF_VAR_region", "us-east-1")}"
     dynamodb_table = "${local.namespace}-terraform-state-lock"
   }
