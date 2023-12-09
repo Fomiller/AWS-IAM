@@ -2,6 +2,8 @@ include "root" {
 	path = find_in_parent_folders()
 }
 
+dependencies = ["../../iam/"]
+
 dependency "member_route53" {
     config_path = "../member"
     mock_outputs_merge_strategy_with_state = "shallow"

@@ -17,3 +17,22 @@ data "aws_iam_policy_document" "terraform_role" {
   }
 }
 
+data "aws_iam_policy_document" "cross_account_route53" {
+  provider = aws.member
+
+  statement {
+    sid    = "CrossAccountRout53"
+    effect = "Allow"
+    actions = [
+      "route53:GetHostedZone"
+    ]
+    resources = [
+      var.fomillercloud_subdomain_public_arn
+    ]
+  }
+}
+
+resource "aws_iam_policy" "cross_account_route53" {
+  name   = "CrossAccountRoute53Access"
+  policy = data.aws_iam_policy_document.cross_account_route53.json
+}
