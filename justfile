@@ -72,6 +72,7 @@ destroy-all dir=infraDir:
     --name-transformer tf-var  \
     -- terragrunt run-all destroy \
     --terragrunt-working-dir={{dir}}
+    --terragrunt-non-interactive
     
 fmt:
     doppler run \
