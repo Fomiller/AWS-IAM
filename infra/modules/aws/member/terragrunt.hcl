@@ -13,10 +13,12 @@ provider "aws" {
   alias = "member"
   access_key = "${get_env("TF_VAR_aws_access_key_id")}"
   secret_key = "${get_env("TF_VAR_aws_secret_access_key")}"
-  role_arn = format("arn:aws:iam::%s:role/%s",
-    "${get_env("TF_VAR_account_id")}",
-    "${get_env("TF_VAR_aws_deployer_role")}",
-  )
+  assume_role {
+      role_arn = format("arn:aws:iam::%s:role/%s",
+          "${get_env("TF_VAR_account_id")}",
+          "${get_env("TF_VAR_aws_deployer_role")}",
+      )
+  }
   region = "us-east-1"
   default_tags {
     tags = {
