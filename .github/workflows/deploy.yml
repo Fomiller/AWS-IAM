@@ -124,7 +124,7 @@ jobs:
     - name: Terragrunt Apply ${{ env.environment }} Account
       continue-on-error: false
       run: |
-        just destroy-all infra/modules/aws/member
+        just apply-all infra/modules/aws/member
         
     # use if you need to debug workflow
     # - name: DEBUG
