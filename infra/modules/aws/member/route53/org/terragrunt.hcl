@@ -2,7 +2,9 @@ include "root" {
 	path = find_in_parent_folders()
 }
 
-dependencies = ["../../iam/"]
+dependencies {
+    paths = ["../../iam/"]
+}
 
 dependency "member_route53" {
     config_path = "../member"
