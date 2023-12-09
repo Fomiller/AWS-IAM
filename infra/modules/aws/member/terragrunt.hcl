@@ -10,6 +10,13 @@ generate provider {
   if_exists = "overwrite_terragrunt"
   contents  = <<EOF
 provider "aws" {
+  alias = "member"
+  access_key = "${get_env("TF_VAR_aws_access_key_id")}"
+  secret_key = "${get_env("TF_VAR_aws_secret_access_key")}"
+  role_arn = format(arn:aws:iam::%s:role/%s,
+    "${get_env("TF_VAR_account_id")}",
+    "${get_env("TF_VAR_deployer_role")}",
+  )
   region = "us-east-1"
   default_tags {
     tags = {
@@ -21,9 +28,6 @@ provider "aws" {
 }
 
 provider "aws" {
-  alias = "org"
-  access_key = "${get_env("TF_VAR_admin_aws_access_key_id")}"
-  secret_key = "${get_env("TF_VAR_admin_aws_secret_access_key")}"
   region = "us-east-1"
   default_tags {
     tags = {

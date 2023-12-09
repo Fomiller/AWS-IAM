@@ -1,4 +1,6 @@
 data "aws_iam_policy_document" "terraform_role" {
+  provider = aws.member
+
   statement {
     sid    = "STSassumeRole"
     effect = "Allow"
