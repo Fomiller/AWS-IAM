@@ -110,6 +110,7 @@ jobs:
         aws-access-key-id: ${{ secrets.ADMIN_AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.ADMIN_AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+        role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_DEPLOYER_ROLE }}
         # skipping taggging because OrgAccountAccess account doesnt allow TagSession
         role-duration-seconds: 1200
       # with:
@@ -124,7 +125,7 @@ jobs:
     - name: Terragrunt Apply ${{ env.environment }} Account
       continue-on-error: false
       run: |
-        just destroy-all infra/modules/aws/member
+        just apply-all infra/modules/aws/member
         
     # use if you need to debug workflow
     # - name: DEBUG
