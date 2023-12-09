@@ -13,7 +13,7 @@ provider "aws" {
   alias = "member"
   access_key = "${get_env("TF_VAR_aws_access_key_id")}"
   secret_key = "${get_env("TF_VAR_aws_secret_access_key")}"
-  role_arn = format(arn:aws:iam::%s:role/%s,
+  role_arn = format("arn:aws:iam::%s:role/%s",
     "${get_env("TF_VAR_account_id")}",
     "${get_env("TF_VAR_aws_deployer_role")}",
   )
