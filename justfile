@@ -2,6 +2,11 @@ set export
 
 infraDir := "infra/modules/aws"
 
+clean:
+    rm -rf infra/modules/**/_.*.gen.tf
+    rm -rf infra/modules/**/.terraform.lock.hcl
+    rm -rf infra/modules/**/.terraform
+
 login env:
     assume-role login -p {{env}}Terraform
 

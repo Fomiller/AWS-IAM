@@ -19,20 +19,6 @@ provider "aws" {
     }
   }
 }
-
-provider "aws" {
-  alias = "org"
-  access_key = "${get_env("TF_VAR_admin_aws_access_key_id")}"
-  secret_key = "${get_env("TF_VAR_admin_aws_secret_access_key")}"
-  region = "us-east-1"
-  default_tags {
-    tags = {
-      email = "forrestmillerj@gmail.com"
-      managedWith = "terraform"
-      repo = "${local.project_name}"
-    }
-  }
-}
 EOF
 }
 
