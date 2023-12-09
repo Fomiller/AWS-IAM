@@ -21,7 +21,7 @@ data "aws_iam_policy_document" "cross_account_route53" {
   provider = aws.member
 
   statement {
-    sid    = "CrossAccountRout53"
+    sid    = "CrossAccountRoute53"
     effect = "Allow"
     actions = [
       "route53:GetHostedZone"
