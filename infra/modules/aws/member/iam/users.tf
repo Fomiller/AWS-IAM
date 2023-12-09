@@ -5,6 +5,6 @@ resource "aws_iam_user" "terraform_user" {
 }
 
 resource "aws_iam_user_policy_attachment" "terraform_role" {
-  user       = data.aws_iam_user.admin.name
+  user       = data.aws_iam_user.admin.user_name
   policy_arn = aws_iam_policy.cross_account_route53.arn
 }
