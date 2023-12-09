@@ -3,7 +3,7 @@ include "root" {
 }
 
 dependency "member_route53" {
-    config_path = "../../member"
+    config_path = "../member"
     mock_outputs_merge_strategy_with_state = "shallow"
     mock_outputs_allowed_terraform_commands = ["validate", "plan", "apply", "destroy"]
     mock_outputs = {
