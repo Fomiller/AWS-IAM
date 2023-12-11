@@ -97,9 +97,8 @@ fmt:
     echo 'locals {}' >> {{infraDir}}/{{acct}}/{{dir}}/main.tf
     
     touch "{{infraDir}}/{{acct}}/{{dir}}/env-config/us-east-1/org.tfvars" 
-    echo 'environment = "org"' > "{{infraDir}}/{{acct}}/{{dir}}/env-config/us-east-1/org.tfvars";
-    
-    echo 'include "root" {\n\
+    echo 'environment = "org"' > {{infraDir}}/{{acct}}/{{dir}}/env-config/us-east-1/dev.tfvars
+    echo -e 'include "root" {\n\
     \tpath = find_in_parent_folders()\n\
     }' > {{infraDir}}/{{acct}}/{{dir}}/terragrunt.hcl
     @# {{infraDir}}/{{acct}}/{{dir}} created.
@@ -120,12 +119,11 @@ fmt:
     echo 'asset_name = "{{dir}}"' >> {{infraDir}}/{{acct}}/{{dir}}/env-config/common.tfvars
     echo 'locals {}' >> {{infraDir}}/{{acct}}/{{dir}}/main.tf
     
-    touch "{{infraDir}}/{{acct}}/{{dir}}/env-config/us-east-1/prod.tfvars"
-    touch "{{infraDir}}/{{acct}}/{{dir}}/env-config/us-east-1/dev.tfvars" 
-    echo 'environment = "dev"' > "{{infraDir}}/{{acct}}/{{dir}}/env-config/us-east-1/dev.tfvars"
-    echo 'environment = "prod"' > "{{infraDir}}/{{acct}}/{{dir}}/env-config/us-east-1/prod.tfvars";
-
-    echo 'include "root" {\n\
+    touch {{infraDir}}/{{acct}}/{{dir}}/env-config/us-east-1/prod.tfvars
+    touch {{infraDir}}/{{acct}}/{{dir}}/env-config/us-east-1/dev.tfvars
+    echo 'environment = "dev"' > {{infraDir}}/{{acct}}/{{dir}}/env-config/us-east-1/dev.tfvars
+    echo 'environment = "prod"' > {{infraDir}}/{{acct}}/{{dir}}/env-config/us-east-1/prod.tfvars
+    echo -e 'include "root" {\n\
     \tpath = find_in_parent_folders()\n\
     }' > {{infraDir}}/{{acct}}/{{dir}}/terragrunt.hcl
     @# {{infraDir}}/{{acct}}/{{dir}} created.
