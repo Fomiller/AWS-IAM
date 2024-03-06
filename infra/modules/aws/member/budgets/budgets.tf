@@ -1,4 +1,5 @@
 resource "aws_budgets_budget" "cost" {
+  name         = "monthly-${var.environment}-budget"
   budget_type  = "COST"
   limit_amount = "200"
   limit_unit   = "USD"
