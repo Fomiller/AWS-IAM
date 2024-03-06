@@ -2,7 +2,7 @@
 **/env.list
 **/aws.sh
 
-#terraform
+# terraform
 *.terraform
 */**/.terragrunt-cache/
 **/backend.tf
@@ -10,4 +10,8 @@
 **/*.gen.tf
 **/.terraform.lock.hcl
 
+# aws 
 .aws-assume.ini
+
+# mdbook
+docs/book
