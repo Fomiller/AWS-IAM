@@ -2,7 +2,7 @@ locals {
     namespace = "fomiller"
     app_prefix = "aws-org"
     project_name = "aws-org" # this should be aws-deployer-roles
-    cross_account_id = get_env("TF_VAR_environment") == "prod" ? get_env("TF_VAR_account_id_dev") : get_env("TF_VAR_account_id_prod")
+    cross_account_id = get_env("TF_VAR_account_id")
 }
 
 generate provider {
