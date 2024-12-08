@@ -2,13 +2,13 @@
 **/env.list
 **/aws.sh
 
-# terraform
-*.terraform
-*/**/.terragrunt-cache/
-**/backend.tf
-**/provider.tf
-**/*.gen.tf
+# terraform / terragrunt
+**/.terragrunt-cache
+**/.terraform
 **/.terraform.lock.hcl
+**/*.gen.tf
+**/bin/*
+**/*.zip
 
 # aws 
 .aws-assume.ini

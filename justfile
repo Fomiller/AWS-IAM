@@ -3,13 +3,22 @@ set export
 infraDir := "infra/modules/aws"
 
 clean:
-    rm -rf infra/modules/**/_.*.gen.tf
-    rm -rf infra/modules/**/.terraform.lock.hcl
-    rm -rf infra/modules/**/.terraform
+    find . -name "_.*.gen.tf" -type f | xargs -r rm -rv
+    find . -name ".terraform.lock.hcl" -type f | xargs -r rm -rv
+    find . -name ".terraform" -type d | xargs -r rm -rv
+    find . -name ".terragrunt-cache" -type d | xargs -r rm -rv
 
 login env:
     doppler run \
     -- assume-role login -p {{env}}Terraform
+
+import tfResource awsResource dir:
+    doppler run \
+    --name-transformer tf-var  \
+    -- terragrunt import \
+    {{tfResource}} \
+    {{awsResource}} \
+    --terragrunt-working-dir {{infraDir}}/{{dir}}
 
 init dir:
     doppler run \
@@ -22,6 +31,12 @@ init-all:
     --name-transformer tf-var  \
     -- terragrunt run-all init \
     --terragrunt-working-dir {{infraDir}}
+
+init-migrate dir:
+    doppler run \
+    --name-transformer tf-var  \
+    -- terragrunt init -migrate-state \
+    --terragrunt-working-dir {{infraDir}}/{{dir}}
 
 validate dir:
     doppler run \
