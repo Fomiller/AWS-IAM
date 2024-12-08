@@ -8,6 +8,9 @@ clean:
     find . -name ".terraform" -type d | xargs -r rm -rv
     find . -name ".terragrunt-cache" -type d | xargs -r rm -rv
 
+doppler-switch env:
+    doppler setup -p aws-org -c {{env}}
+
 login env:
     doppler run \
     -- assume-role login -p {{env}}Terraform
