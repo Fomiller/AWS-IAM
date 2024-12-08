@@ -8,7 +8,8 @@ clean:
     rm -rf infra/modules/**/.terraform
 
 login env:
-    assume-role login -p {{env}}Terraform
+    doppler run \
+    -- assume-role login -p {{env}}Terraform
 
 init dir:
     doppler run \
